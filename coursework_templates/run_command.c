@@ -8,6 +8,19 @@ void execute_line(char** args) {
   // is a parent or a child, and run exec() if it is a child, and
   // run wait() if it is a parent.
   // For guidance, the model solution has 9 lines of code.
+
+  int f = fork();
+
+  if (f < 0) {
+    fprintf(2, "The fork has failed");
+  }
+  else if (f == 0) {
+    exec(args[0], args);
+    fprintf(2, "Exec has failed");
+  }
+  else {
+    wait(o);
+  }
 }
 
 
@@ -20,15 +33,34 @@ int main(int argc, char *argv[]) {
   char buf[512], *b;
   // Point b to the first character in the line.
 
-  // Read characters from the standard input. When we find '\n' that
-  // means one line has terminated - execute the command.
-  fprintf(2, "Please enter command and press enter (type 'q' to exit):\n");
-  while (read(0, b, 1) > 0) {
-    // Check the current character in b. If it is not special, move the pointer
-    // b to the next character and continue reading. If the command string has
-    // been fully entered ('\n' is found in b), execute the command by calling
-    // execute_line().
-    // For guidance, the model solution has 10 lines of code in this loop.
+  while (1) {
+    b = buf;
+
+    if (buf[0] == 'q' && buf[1] == '\0') {
+      break;
+    }
+  
+    // Read characters from the standard input. When we find '\n' that
+    // means one line has terminated - execute the command.
+    fprintf(2, "Please enter command and press enter (type 'q' to exit):\n");
+    while (read(0, b, 1) > 0) {
+      // Check the current character in b. If it is not special, move the pointer
+      // b to the next character and continue reading. If the command string has
+      // been fully entered ('\n' is found in b), execute the command by calling
+      // execute_line().
+      // For guidance, the model solution has 10 lines of code in this loop.
+
+      if (*b == '\n') {
+	*b = '\0';
+
+	args[0] = buf;
+	args[1] = 0;
+      
+	execute_line(args);
+	break;
+      }
+      b++;
+    }
   }
   exit(0);
 }

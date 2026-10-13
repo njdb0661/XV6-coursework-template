@@ -19,7 +19,7 @@ void execute_line(char** args) {
     fprintf(2, "Exec has failed");
   }
   else {
-    wait(o);
+    wait(0);
   }
 }
 
@@ -35,10 +35,6 @@ int main(int argc, char *argv[]) {
 
   while (1) {
     b = buf;
-
-    if (buf[0] == 'q' && buf[1] == '\0') {
-      break;
-    }
   
     // Read characters from the standard input. When we find '\n' that
     // means one line has terminated - execute the command.
@@ -51,7 +47,11 @@ int main(int argc, char *argv[]) {
       // For guidance, the model solution has 10 lines of code in this loop.
 
       if (*b == '\n') {
-	*b = '\0';
+		*b = '\0';
+
+		if (buf[0] == 'q' && buf[1] == '\0') {
+      		exit(0);
+    	}
 
 	args[0] = buf;
 	args[1] = 0;
